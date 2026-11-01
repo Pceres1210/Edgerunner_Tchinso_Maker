@@ -1,4 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>트친소표 메이커</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -144,7 +149,8 @@ textarea.in { resize: vertical; min-height: 44px; }
 
 @media (prefers-reduced-motion: no-preference) { .btn, .opt { transition: border-color .15s, background-color .15s; } }
 </style>
-
+</head>
+<body>
 <header class="top">
   <div class="top-in">
     <h1 class="brand">사이버펑크 엣지러너 2 트친소표 메이커<small>항목을 채우고 이미지로 저장하세요</small></h1>
@@ -548,6 +554,13 @@ $('#export').addEventListener('click', async e => {
     }
     if (lastUrl) URL.revokeObjectURL(lastUrl);
     lastUrl = URL.createObjectURL(blob);
+    // A normal web page (e.g. GitHub Pages) can save directly; inside Claude's viewer that's blocked, so show the image instead
+    if (!window.claude) {
+      const a = document.createElement('a');
+      a.href = lastUrl; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      toast('이미지를 저장했어요'); return;
+    }
     $('#modal-img').src = lastUrl; $('#modal').hidden = false;
   } catch (err) {
     toast('이미지를 만들지 못했어요. 다시 시도해 주세요.');
@@ -560,5 +573,5 @@ $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#mo
 
 renderAll();
 </script>
-
-</body></html>
+</body>
+</html>
